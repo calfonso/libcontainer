@@ -113,7 +113,7 @@ void nsenter() {
 		}
 	}
 
-	if (strcmp(argv[optind - 2], kNsEnter) != 0) {
+	if (strcmp(argv[optind - 3], kNsEnter) != 0) {
 		return;
 	}
 

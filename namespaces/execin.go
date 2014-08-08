@@ -15,7 +15,7 @@ import (
 // ExecIn uses an existing pid and joins the pid's namespaces with the new command.
 func ExecIn(container *libcontainer.Config, state *libcontainer.State, args []string) error {
 	// Enter the namespace and then finish setup
-	args, err := GetNsEnterCommand(strconv.Itoa(state.InitPid), container, "", args)
+	args, err := GetNsEnterCommand(strconv.Itoa(state.InitPid), container, "", "exec", args)
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func getContainerJson(container *libcontainer.Config) (string, error) {
 	return string(containerJson), nil
 }
 
-func GetNsEnterCommand(initPid string, container *libcontainer.Config, console string, args []string) ([]string, error) {
+func GetNsEnterCommand(initPid string, container *libcontainer.Config, console string, command string, args []string) ([]string, error) {
 	containerJson, err := getContainerJson(container)
 	if err != nil {
 		return nil, err
@@ -54,6 +54,7 @@ func GetNsEnterCommand(initPid string, container *libcontainer.Config, console s
 		out = append(out, "--console", console)
 	}
 	out = append(out, "nsenter")
+	out = append(out, command)
 	out = append(out, "--")
 	out = append(out, args...)
 
